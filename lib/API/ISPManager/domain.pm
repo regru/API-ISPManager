@@ -48,7 +48,24 @@ sub edit {
 
 # Delete domain from panel
 sub delete {
+    my $params = shift;
+    
+    my $result = API::ISPManager::query_abstract(
+        params => { %$params, sok => 'yes' }, # чтобы удаление разрешить
+        func   => 'domain.delete',
+        allowed_fields => [  qw( host path allow_http  sok elid webdomain maildomain ) ],
+    );
 
+    $API::ISPManager::last_answer = $result;
+
+    if ($result && $result->{ok}) {
+        return 1;
+    } else {
+        return '';
+    }
+# &elid=dname.ru
+# &webdomain=off
+# &maildomain=off
 }
 
 package API::ISPManager::email_domain;
