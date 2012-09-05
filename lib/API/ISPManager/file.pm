@@ -173,8 +173,8 @@ sub upload {
                
         my $response = $ua->post(
             'https://' . $params->{host} . '/mancgi/upload',
-			Content_Type => 'form-data',
-			Content => [                
+                        Content_Type => 'form-data',
+                        Content => [                
                 filename => [$params->{file}],
                 sok => 'ok',
                 auth => $auth_id,    

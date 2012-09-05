@@ -46,7 +46,7 @@ sub create {
         (
             $result->{ok} or
             ( $result->{error} && ref $result->{error} eq 'HASH' && $result->{error}->{code} eq '2' && 
-	    (($result->{error}->{obj} eq 'user') || ($result->{error}->{obj} eq 'group') ) )  # already exists
+            (($result->{error}->{obj} eq 'user') || ($result->{error}->{obj} eq 'group') ) )  # already exists
         )
     ) {
         return 1;  # { success => 1 };
