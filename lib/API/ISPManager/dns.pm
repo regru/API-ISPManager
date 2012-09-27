@@ -57,6 +57,8 @@ sub sublist {
         parser_params => { ForceArray => ['name'] }, 
     );
 
+    return ""    unless $server_answer;
+
     for my $el ( @{$server_answer->{elem}} ) {
         $el->{name} = $el->{name}->[0];
     }
