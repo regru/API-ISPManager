@@ -57,7 +57,14 @@ sub sublist {
         parser_params => { ForceArray => ['name'] }, 
     );
 
-    return ""    unless $server_answer;
+    unless ( $server_answer ) {
+        return {
+            error => {
+                code => 0,
+                obj  => "No answer from server with ISP Panel",
+            }
+        }
+    }
 
     for my $el ( @{$server_answer->{elem}} ) {
         $el->{name} = $el->{name}->[0];
