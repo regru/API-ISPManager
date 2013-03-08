@@ -250,11 +250,13 @@ sub parse_answer {
     my $parser_params =
         $params{parser_params} || { };
 
+    $last_answer = {};
     return '' unless $answer_string;
 
     my $deparsed = XMLin( $answer_string, %$parser_params );
     warn Dumper $deparsed if $DEBUG;
     
+    $last_answer = $deparsed;
     return $deparsed ? $deparsed : '';
 }
 
@@ -419,7 +421,11 @@ sub query_abstract {
 
     warn 'query_abstract ' . Dumper( \%params ) if $DEBUG;
 
-    return '' unless $params_raw && $func_name; 
+    unless ($params_raw && $func_name) {
+        $last_answer = { error => '"func" && "params" not specified!' };
+        
+        return '';
+    } 
 
     my $allowed_fields = $params{allowed_fields} || [ 'host', 'path', 'allow_http' ];
     # TODO сделать сцепку массивов тут!!!!
@@ -429,7 +435,11 @@ sub query_abstract {
     my $auth_id = $fake_answer  ? '112323' : get_auth_id( %$params_raw );
     warn "Auth_id: $auth_id\n" if $DEBUG;
 
-    return '' unless user_su( %{{ %$params_raw, auth => $auth_id, }} );
+    unless ( user_su( %{{ %$params_raw, auth => $auth_id, }} ) ) {
+        $last_answer = { error => '"user_su" failed' };
+        
+        return '';
+    }
 
     if ($auth_id or $func_name eq 'ftp') { # ftp hacked by authinfo
         my $params = filter_hash( $params_raw, $allowed_fields);
@@ -458,6 +468,9 @@ sub query_abstract {
 
     } else {
         warn "auth_id not found or func type not ftp" if $DEBUG;
+        
+        $last_answer = { error => 'auth_id not found or func type not ftp' };
+        
         return '';
     }
 }
