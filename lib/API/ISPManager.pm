@@ -227,12 +227,16 @@ sub mk_query_to_server {
                 warn $content if $DEBUG;
                 return $content;
             } else {
+                $last_answer = { error => 'malformed xml ' . $response->as_string };
                 return '';
             }
         } else {
+            
+            $last_answer = { error => 'bad content-type ' . $response->as_string };
             return '';
         }
     } else {
+        $last_answer = { error => 'mk_query_to_server is not success ' . $response->as_string };
         return '';
     }
 }
@@ -269,8 +273,12 @@ sub process_query {
     my $xml_parser_params = $params{parser_params} || '';
     my $fake_answer       = $params{fake_answer} || '';
 
-    return '' unless $query_string;
-
+    if ( ! $query_string ) {
+        $last_answer = { error => 'no query_string specified!' };
+        
+        return '';
+    }
+    
     my $answer = $fake_answer ? $fake_answer : mk_query_to_server($query_string);
     warn $answer if $answer && $DEBUG;
 
