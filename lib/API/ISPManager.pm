@@ -351,7 +351,7 @@ sub get_auth_id {
     if ($xml) {
         my $error_node = exists $xml->{authfail};
         if ( $error_node ) {
-            $error = { error => 'error_code is true' };
+            $last_answer = { error => 'error_code is true' };
             return '';
         }
 
