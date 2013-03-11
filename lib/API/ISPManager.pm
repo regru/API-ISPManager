@@ -227,16 +227,16 @@ sub mk_query_to_server {
                 warn $content if $DEBUG;
                 return $content;
             } else {
-                $last_answer = { error => 'malformed xml ' . $response->as_string };
+                $last_answer = { error => 'malformed xml ' . $response->as_string, query_string => $query_string };
                 return '';
             }
         } else {
             
-            $last_answer = { error => 'bad content-type ' . $response->as_string };
+            $last_answer = { error => 'bad content-type ' . $response->as_string, query_string => $query_string };
             return '';
         }
     } else {
-        $last_answer = { error => 'mk_query_to_server is not success ' . $response->as_string };
+        $last_answer = { error => 'mk_query_to_server is not success ' . $response->as_string, query_string => $query_string };
         return '';
     }
 }
