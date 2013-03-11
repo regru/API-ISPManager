@@ -327,6 +327,7 @@ sub get_auth_id {
 
     # Check this sub params
     unless ($params->{username} && $params->{password}) {
+        $last_answer = { error => 'username && password not specified' };
         return '';
     }
 
@@ -337,7 +338,11 @@ sub get_auth_id {
         out      => 'xml',
     } );
 
-    return '' unless $query_string;
+    unless ( $query_string ) {
+        $last_answer = { error => 'query_string is empty ' };
+        
+        return '';
+    }
     
     warn $query_string if $DEBUG;
 
@@ -345,10 +350,14 @@ sub get_auth_id {
 
     if ($xml) {
         my $error_node = exists $xml->{authfail};
-        return '' if $error_node;
+        if ( $error_node ) {
+            $error = { error => 'error_code is true' };
+            return '';
+        }
 
         return $xml->{auth}->{id};
     } else {
+        $last_answer = { error => 'no xml in response' };
         return '';
     }
 }
