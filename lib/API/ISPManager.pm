@@ -236,7 +236,7 @@ sub mk_query_to_server {
             return '';
         }
     } else {
-        $last_answer = { error => 'mk_query_to_server is not success ' . $response->as_string, query_string => $query_string };
+        $last_answer = { error => 'mk_query_to_server is not success ', query_string => $query_string, status => $response->status_line };
         return '';
     }
 }
