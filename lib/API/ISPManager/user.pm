@@ -19,7 +19,7 @@ sub list {
 sub active_user_count {
     my $params = shift;
     my $ans = API::ISPManager::user::list($params);
-    
+
     my $result = 0;
     foreach my $key (keys %{$ans->{elem}}) {
         $result++ unless exists $ans->{elem}->{$key}->{disabled};
@@ -34,7 +34,7 @@ sub create {
 
     my $result = API::ISPManager::query_abstract(
         params => { %$params, sok => 'yes' }, # чтобы создание разрешить
-        func   => 'user.edit', 
+        func   => 'user.edit',
         allowed_fields => [  qw( host path allow_http sok name domain email preset ip passwd view ) ],
     );
 
@@ -45,7 +45,7 @@ sub create {
         ref $result eq 'HASH' &&
         (
             $result->{ok} or
-            ( $result->{error} && ref $result->{error} eq 'HASH' && $result->{error}->{code} eq '2' && 
+            ( $result->{error} && ref $result->{error} eq 'HASH' && $result->{error}->{code} eq '2' &&
             (($result->{error}->{obj} eq 'user') || ($result->{error}->{obj} eq 'group') ) )  # already exists
         )
     ) {
@@ -60,7 +60,7 @@ sub create {
 # Edit user data
 sub edit {
     my $params = shift;
-    
+
     my $result = API::ISPManager::query_abstract(
         params => $params,
         func   => 'user.edit',
@@ -75,10 +75,10 @@ sub delete {
     my $params = shift;
 
     my $result = abstract_bool_manipulate($params, 'user.delete');
- 
+
     $API::ISPManager::last_answer = $result;
 
-    if ( $result && ref $result eq 'HASH' && ( $result->{ok} || 
+    if ( $result && ref $result eq 'HASH' && ( $result->{ok} ||
          ( $result->{error} && ref $result->{error} eq 'HASH' && $result->{error}->{code} eq '3' && $result->{error}->{obj} eq 'user' ) ) ) {
         return 1;
     } else {
@@ -94,7 +94,7 @@ sub abstract_bool_manipulate {
 
     my $result = API::ISPManager::query_abstract(
         params => $params,
-        func   => $type, 
+        func   => $type,
         allowed_fields => [  qw( host path allow_http    elid) ],
     );
 
@@ -131,6 +131,22 @@ sub disable {
     } else {
         return '';
     }
+}
+
+# Check user exists
+sub check_user_exists {
+    my ( $params, $user_id ) = @_;
+
+    return '' unless $params && $user_id;
+
+    my $ans = API::ISPManager::user::list( $params );
+
+    for my $key ( keys %{ $ans->{elem} } ) {
+        return 1 if $user_id eq $key;
+    }
+
+    return '';
+
 }
 
 1;
