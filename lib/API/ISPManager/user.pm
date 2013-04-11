@@ -135,18 +135,17 @@ sub disable {
 
 # Check user exists
 sub check_user_exists {
-    my ( $params, $user_id ) = @_;
+    my $params = shift;
 
-    return '' unless $params && $user_id;
+    return '' unless $params;
 
     my $ans = API::ISPManager::user::list( $params );
 
     for my $key ( keys %{ $ans->{elem} } ) {
-        return 1 if $user_id eq $key;
+        return 1 if $params->{elid} eq $key;
     }
 
     return '';
 
 }
-
 1;
