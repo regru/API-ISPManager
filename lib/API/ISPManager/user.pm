@@ -15,7 +15,7 @@ sub list {
     );
 }
 
-# ¬озвращает число активных пользователей
+# ?????????? ????? ???????? ?????????????
 sub active_user_count {
     my $params = shift;
     my $ans = API::ISPManager::user::list($params);
@@ -64,7 +64,7 @@ sub edit {
     my $result = API::ISPManager::query_abstract(
         params => $params,
         func   => 'user.edit',
-        allowed_fields => [  qw( host path allow_http     sok elid name domain email preset ip passwd ftplimit disklimit ssl ssi phpmod safemode  maillimit domainlimit webdomainlimit maildomainlimit baselimit baseuserlimit bandwidthlimit phpfcgi cgi owner ) ],
+        allowed_fields => [  qw( host path allow_http     sok elid name domain email preset ip passwd ftplimit disklimit ssl ssi phpmod safemode  maillimit domainlimit webdomainlimit maildomainlimit baselimit baseuserlimit bandwidthlimit phpfcgi cgi owner shell ) ],
     );
 
     return $result;
