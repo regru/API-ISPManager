@@ -43,7 +43,7 @@ sub edit {
         fake_answer => shift,
     );
     return $server_answer;
-   
+
 }
 
 sub sublist {
@@ -66,12 +66,18 @@ sub sublist {
         }
     }
 
+    # Если в зоне одна ресурсная запись, она возвращается как хеш
+    if( ref $server_answer->{elem} eq 'HASH' ) {
+        # должен возвращаться массив из одного элемента
+        $server_answer->{elem} =  [ $server_answer->{elem} ];
+    }
+
     for my $el ( @{$server_answer->{elem}} ) {
         $el->{name} = $el->{name}->[0];
     }
 
     return $server_answer;
-   
+
 }
 
 sub sublist_get {
